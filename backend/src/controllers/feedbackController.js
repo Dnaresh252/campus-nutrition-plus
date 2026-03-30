@@ -1,6 +1,32 @@
 const { query } = require("../config/database");
 
 /**
+ * Call AI API in background after feedback is saved
+ * Non-blocking — student response is never delayed by this
+ */
+const analyzeWithAI = async (feedbackId, comment, mealType) => {
+  const aiUrl = process.env.AI_API_URL;
+  if (!aiUrl) return;
+
+  const response = await fetch(`${aiUrl}/analyze`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ comment, meal_type: mealType }),
+    signal: AbortSignal.timeout(15000), // 15s timeout
+  });
+
+  if (!response.ok) return;
+
+  const data = await response.json();
+  if (!data.success) return;
+
+  await query("UPDATE feedback SET ai_analysis = $1 WHERE id = $2", [
+    JSON.stringify(data.data),
+    feedbackId,
+  ]);
+};
+
+/**
  * Submit feedback
  * STUDENT ONLY
  */
@@ -42,12 +68,18 @@ const submitFeedback = async (req, res, next) => {
     );
 
     const row = result.rows[0];
+
+    // Fire-and-forget AI analysis — student doesn't wait for this
+    if (comments) {
+      analyzeWithAI(row.id, comments, mealType).catch(() => {});
+    }
+
     res.status(201).json({
       success: true,
       message: "Feedback submitted successfully",
       data: {
         ...row,
-        submission_date: today, // return IST date string directly
+        submission_date: today,
       },
     });
   } catch (error) {
@@ -178,9 +210,9 @@ const getLiveFeedbackStats = async (req, res, next) => {
       totalRatings: data.count,
     }));
 
-    // Get recent comments
+    // Get recent comments with AI analysis
     const commentsResult = await query(
-      `SELECT comments, submitted_at FROM feedback
+      `SELECT comments, submitted_at, ai_analysis FROM feedback
        WHERE submission_date = $1 AND meal_type = $2 AND comments IS NOT NULL
        ORDER BY submitted_at DESC
        LIMIT 10`,

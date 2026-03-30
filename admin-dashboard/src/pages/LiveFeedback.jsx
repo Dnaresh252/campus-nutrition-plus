@@ -541,6 +541,88 @@ const LiveFeedback = () => {
               )}
             </div>
 
+            {/* AI Insights Summary */}
+            {stats.recentComments?.some((c) => c.ai_analysis) && (
+              <div className="admin-card p-6 admin-card-hover">
+                <div className="flex items-center gap-2 mb-5">
+                  <span className="text-lg">🤖</span>
+                  <h3 className="text-base font-bold text-neutral-900">
+                    AI Sentiment Insights
+                  </h3>
+                  <span
+                    className="ml-2 text-xs font-bold px-2.5 py-1 rounded-full"
+                    style={{
+                      background: "rgba(201,168,76,0.10)",
+                      color: "#9a7a1e",
+                      border: "1px solid rgba(201,168,76,0.2)",
+                    }}
+                  >
+                    Powered by DistilBERT
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[
+                    {
+                      emoji: "🟢",
+                      label: "Positive",
+                      count: stats.recentComments.filter(
+                        (c) => c.ai_analysis?.sentiment === "POSITIVE",
+                      ).length,
+                      color: "#059669",
+                      bg: "rgba(5,150,105,0.07)",
+                    },
+                    {
+                      emoji: "🟡",
+                      label: "Neutral",
+                      count: stats.recentComments.filter(
+                        (c) => c.ai_analysis?.sentiment === "NEUTRAL",
+                      ).length,
+                      color: "#d97706",
+                      bg: "rgba(217,119,6,0.07)",
+                    },
+                    {
+                      emoji: "🔴",
+                      label: "Negative",
+                      count: stats.recentComments.filter(
+                        (c) => c.ai_analysis?.sentiment === "NEGATIVE",
+                      ).length,
+                      color: "#e11d48",
+                      bg: "rgba(225,29,72,0.07)",
+                    },
+                    {
+                      emoji: "🚨",
+                      label: "Critical",
+                      count: stats.recentComments.filter(
+                        (c) => c.ai_analysis?.urgency === "CRITICAL",
+                      ).length,
+                      color: "#dc2626",
+                      bg: "rgba(220,38,38,0.07)",
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className="rounded-xl p-4 text-center"
+                      style={{
+                        background: item.bg,
+                        border: `1px solid ${item.color}22`,
+                      }}
+                    >
+                      <p className="text-2xl mb-1">{item.emoji}</p>
+                      <p
+                        className="text-2xl font-bold mb-0.5"
+                        style={{ color: item.color }}
+                      >
+                        {item.count}
+                      </p>
+                      <p className="text-xs font-semibold text-neutral-500">
+                        {item.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Comments feed */}
             <div className="admin-card p-6 admin-card-hover">
               <div className="flex items-center gap-2 mb-5">
@@ -562,36 +644,116 @@ const LiveFeedback = () => {
                 )}
               </div>
               {stats.recentComments?.length > 0 ? (
-                <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
-                  {stats.recentComments.map((comment, index) => (
-                    <div
-                      key={index}
-                      className="p-4 rounded-xl animate-slide-in-right"
-                      style={{
-                        background: "#fafafa",
-                        borderLeft: "3px solid #c9a84c",
-                        animationDelay: `${index * 40}ms`,
-                      }}
-                    >
-                      <p className="text-sm text-neutral-700 leading-relaxed mb-2">
-                        "{comment.comments}"
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-neutral-400">
-                          {format(new Date(comment.submitted_at), "h:mm:ss a")}
-                        </span>
-                        <span
-                          className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                          style={{
-                            background: "rgba(201,168,76,0.10)",
-                            color: "#9a7a1e",
-                          }}
-                        >
-                          Live
-                        </span>
+                <div className="space-y-3 max-h-[600px] overflow-y-auto pr-1">
+                  {stats.recentComments.map((comment, index) => {
+                    const ai = comment.ai_analysis;
+                    const urgencyColors = {
+                      CRITICAL: { bg: "rgba(220,38,38,0.08)", border: "#dc2626", text: "#dc2626" },
+                      HIGH:     { bg: "rgba(234,88,12,0.08)",  border: "#ea580c", text: "#ea580c" },
+                      MEDIUM:   { bg: "rgba(217,119,6,0.08)",  border: "#d97706", text: "#d97706" },
+                      LOW:      { bg: "rgba(100,116,139,0.08)",border: "#64748b", text: "#64748b" },
+                      NONE:     { bg: "rgba(5,150,105,0.08)",  border: "#059669", text: "#059669" },
+                    };
+                    const uc = ai ? (urgencyColors[ai.urgency] ?? urgencyColors.NONE) : null;
+
+                    return (
+                      <div
+                        key={index}
+                        className="p-4 rounded-xl animate-slide-in-right"
+                        style={{
+                          background: ai ? uc.bg : "#fafafa",
+                          borderLeft: `3px solid ${ai ? uc.border : "#c9a84c"}`,
+                          animationDelay: `${index * 40}ms`,
+                        }}
+                      >
+                        {/* Comment text */}
+                        <p className="text-sm text-neutral-700 leading-relaxed mb-3">
+                          "{comment.comments}"
+                        </p>
+
+                        {/* AI Analysis badges */}
+                        {ai && (
+                          <div className="space-y-2 mb-3">
+                            <div className="flex flex-wrap items-center gap-2">
+                              {/* Sentiment */}
+                              <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                                style={{ background: "rgba(15,23,42,0.07)", color: "#0f172a" }}>
+                                {ai.sentiment_emoji} {ai.sentiment}
+                              </span>
+                              {/* Score */}
+                              <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                                style={{ background: "rgba(201,168,76,0.10)", color: "#9a7a1e" }}>
+                                Score: {ai.score}/5
+                              </span>
+                              {/* Urgency */}
+                              {ai.urgency !== "NONE" && (
+                                <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                                  style={{ background: uc.bg, color: uc.text, border: `1px solid ${uc.border}44` }}>
+                                  ⚡ {ai.urgency}
+                                </span>
+                              )}
+                              {/* Confidence */}
+                              <span className="text-xs text-neutral-400 font-medium">
+                                {ai.confidence}% confidence
+                              </span>
+                            </div>
+
+                            {/* Issues */}
+                            {ai.issues?.length > 0 && (
+                              <div className="flex flex-wrap gap-1.5">
+                                {ai.issues.map((issue) => (
+                                  <span key={issue}
+                                    className="text-xs font-semibold px-2 py-0.5 rounded-md"
+                                    style={{ background: "rgba(220,38,38,0.08)", color: "#dc2626" }}>
+                                    ⚠ {issue}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Dishes mentioned */}
+                            {ai.dishes_mentioned?.length > 0 && (
+                              <div className="flex flex-wrap gap-1.5">
+                                {ai.dishes_mentioned.map((dish) => (
+                                  <span key={dish}
+                                    className="text-xs font-semibold px-2 py-0.5 rounded-md"
+                                    style={{ background: "rgba(30,42,138,0.07)", color: "#1e2a8a" }}>
+                                    🍽 {dish}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Suggested action for critical/high */}
+                            {(ai.urgency === "CRITICAL" || ai.urgency === "HIGH") && (
+                              <div className="flex items-start gap-2 px-3 py-2 rounded-lg"
+                                style={{ background: uc.bg, border: `1px solid ${uc.border}33` }}>
+                                <span className="text-xs">💡</span>
+                                <p className="text-xs font-semibold" style={{ color: uc.text }}>
+                                  {ai.suggested_action}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-neutral-400">
+                            {format(new Date(comment.submitted_at), "h:mm:ss a")}
+                          </span>
+                          <span
+                            className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                            style={{
+                              background: ai ? uc.bg : "rgba(201,168,76,0.10)",
+                              color: ai ? uc.text : "#9a7a1e",
+                            }}
+                          >
+                            {ai ? "AI Analyzed" : "Pending AI"}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : (
                 <Empty icon={MessageSquare} msg="No comments yet" />
