@@ -1,0 +1,360 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   CSS VARIABLES — Aditya University Brand
+   ============================================ */
+:root {
+  --navy: #0f172a;
+  --navy-light: #1e2a8a;
+  --gold: #c9a84c;
+  --gold-light: #f5c842;
+  --gold-dark: #9a7a1e;
+  --sidebar-w: 260px;
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a3a3a3;
+}
+
+/* ============================================
+   BASE RESET
+   ============================================ */
+*,
+*::before,
+*::after {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family:
+    "Plus Jakarta Sans",
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background: #f8f9fc;
+  color: #171717;
+  min-height: 100vh;
+  letter-spacing: -0.01em;
+}
+
+/* ============================================
+   COMPONENT LIBRARY
+   ============================================ */
+@layer components {
+  /* ---- Layout Cards ---- */
+  .admin-card {
+    @apply bg-white rounded-2xl border border-neutral-200;
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.06),
+      0 0 0 1px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .admin-card-hover:hover {
+    box-shadow:
+      0 12px 32px rgba(0, 0, 0, 0.12),
+      0 0 0 1px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+  }
+
+  /* ---- Buttons ---- */
+  .admin-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm
+           text-white transition-all duration-200 active:scale-95
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
+    background: linear-gradient(135deg, var(--navy-light) 0%, var(--navy) 100%);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.3);
+  }
+  .admin-btn-primary:hover:not(:disabled) {
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.4);
+    transform: translateY(-1px);
+  }
+
+  .admin-btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm
+           transition-all duration-200 active:scale-95;
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+    color: var(--navy);
+    box-shadow: 0 4px 14px rgba(201, 168, 76, 0.35);
+  }
+  .admin-btn-gold:hover {
+    box-shadow: 0 6px 20px rgba(201, 168, 76, 0.5);
+    transform: translateY(-1px);
+  }
+
+  .admin-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm
+           bg-white text-neutral-700 border border-neutral-200
+           hover:bg-neutral-50 hover:border-neutral-300
+           transition-all duration-200 active:scale-95;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  }
+  .admin-btn-secondary:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .admin-btn-danger {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm
+           bg-red-600 text-white hover:bg-red-700
+           transition-all duration-200 active:scale-95;
+    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.25);
+  }
+
+  .admin-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-medium text-sm
+           text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900
+           transition-all duration-200 active:scale-95;
+  }
+
+  /* ---- Inputs ---- */
+  .admin-input {
+    @apply w-full px-4 py-3 border border-neutral-200 rounded-xl text-sm font-medium
+           bg-white text-neutral-900 placeholder:text-neutral-400
+           focus:outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-100
+           transition-all duration-200;
+  }
+  .admin-input:hover {
+    @apply border-neutral-300;
+  }
+
+  .admin-label {
+    @apply block text-sm font-semibold text-neutral-700 mb-1.5;
+  }
+
+  /* ---- Sidebar Links ---- */
+  .sidebar-link {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
+           text-neutral-400 transition-all duration-200 cursor-pointer;
+  }
+  .sidebar-link:hover {
+    @apply bg-white text-white;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
+  }
+  .sidebar-link-active {
+    color: var(--navy) !important;
+    background: linear-gradient(
+      135deg,
+      var(--gold-light) 0%,
+      var(--gold) 100%
+    ) !important;
+    box-shadow: 0 4px 14px rgba(201, 168, 76, 0.35);
+  }
+  .sidebar-link-active svg {
+    color: var(--navy) !important;
+  }
+
+  /* ---- Stats Cards ---- */
+  .stats-card-premium {
+    @apply bg-white rounded-2xl p-6 border border-neutral-200;
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.06),
+      0 0 0 1px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .stats-card-premium:hover {
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+    transform: translateY(-3px);
+  }
+
+  /* ---- Gradient Cards ---- */
+  .gradient-card-primary {
+    @apply rounded-2xl p-6 text-white;
+    background: linear-gradient(135deg, #1e2a8a 0%, #0f172a 100%);
+    box-shadow: 0 8px 32px rgba(15, 23, 42, 0.3);
+  }
+  .gradient-card-success {
+    @apply rounded-2xl p-6 text-white;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    box-shadow: 0 8px 32px rgba(5, 150, 105, 0.25);
+  }
+  .gradient-card-warning {
+    @apply rounded-2xl p-6 text-white;
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    box-shadow: 0 8px 32px rgba(217, 119, 6, 0.25);
+  }
+  .gradient-card-gold {
+    @apply rounded-2xl p-6;
+    background: linear-gradient(135deg, #f5c842 0%, #c9a84c 100%);
+    color: var(--navy);
+    box-shadow: 0 8px 32px rgba(201, 168, 76, 0.35);
+  }
+
+  /* ---- Badges ---- */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold;
+  }
+  .badge-primary {
+    @apply bg-navy-100 text-navy-900 border border-navy-200;
+  }
+  .badge-gold {
+    background: rgba(201, 168, 76, 0.15);
+    color: var(--gold-dark);
+    border: 1px solid rgba(201, 168, 76, 0.3);
+  }
+  .badge-success {
+    @apply bg-emerald-100 text-emerald-700 border border-emerald-200;
+  }
+  .badge-warning {
+    @apply bg-amber-100 text-amber-700 border border-amber-200;
+  }
+  .badge-danger {
+    @apply bg-red-100 text-red-700 border border-red-200;
+  }
+
+  /* ---- Table ---- */
+  .table-header {
+    @apply text-xs font-bold text-neutral-500 uppercase tracking-wider;
+  }
+  .table-row {
+    @apply border-b border-neutral-100 hover:bg-neutral-50 transition-colors;
+  }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-slide-in-up {
+  animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out both;
+}
+.animate-scale-in {
+  animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.sidebar-glass {
+  background: linear-gradient(180deg, #0f172a 0%, #1a2344 100%);
+}
+
+.gold-text {
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gold-border {
+  border: 1px solid rgba(201, 168, 76, 0.4);
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201, 168, 76, 0.3),
+    transparent
+  );
+  margin: 0.5rem 0;
+}
+
+.loading-spinner {
+  @apply w-8 h-8 rounded-full animate-spin;
+  border: 3px solid rgba(201, 168, 76, 0.2);
+  border-top-color: var(--gold);
+}
+
+.skeleton {
+  @apply bg-neutral-200 animate-pulse rounded-lg;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  @apply outline-none ring-2 ring-gold-400 ring-offset-1;
+}
+
+/* Page background */
+.page-bg {
+  background: #f8f9fc;
+  min-height: 100vh;
+}

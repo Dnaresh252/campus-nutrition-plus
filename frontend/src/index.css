@@ -1,0 +1,201 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hide scrollbar but keep functionality */
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+/* Body - Mobile First */
+body {
+  margin: 0;
+  padding: 0;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
+  color: #1a1a1a;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Remove all tap highlights and selections */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection in input fields */
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Safe area for iOS notches */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    padding-top: max(0px, env(safe-area-inset-top));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Mobile-optimized components */
+@layer components {
+  .mobile-card {
+    @apply bg-white rounded-2xl shadow-sm border border-neutral-100 p-4;
+  }
+
+  .mobile-card-lg {
+    @apply bg-white rounded-2xl shadow-sm border border-neutral-100 p-5;
+  }
+
+  .mobile-btn-primary {
+    @apply w-full bg-primary-600 text-white px-6 py-4 rounded-xl font-semibold 
+           text-lg active:scale-[0.98] transition-transform duration-100
+           shadow-lg shadow-primary-600/30 min-h-[56px] flex items-center justify-center;
+  }
+
+  .mobile-btn-secondary {
+    @apply w-full bg-neutral-100 text-neutral-900 px-6 py-4 rounded-xl font-semibold
+           text-lg active:scale-[0.98] transition-transform duration-100 min-h-[56px];
+  }
+
+  .mobile-input {
+    @apply w-full px-4 py-4 border-2 border-neutral-200 rounded-xl
+           focus:border-primary-500 focus:ring-0 transition-colors duration-200 
+           bg-white text-base font-medium min-h-[56px];
+  }
+
+  .mobile-section-title {
+    @apply text-lg font-bold text-neutral-900 mb-3;
+  }
+
+  .mobile-label {
+    @apply text-sm font-semibold text-neutral-700 mb-2 block;
+  }
+}
+
+/* Touch-optimized star rating */
+.star-button {
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Slider thumb - larger for touch */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 3px solid currentColor;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 3px solid currentColor;
+}
+
+/* Animations optimized for mobile */
+@keyframes slideUpMobile {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInMobile {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slide-up-mobile {
+  animation: slideUpMobile 0.3s ease-out;
+}
+
+.animate-fade-in-mobile {
+  animation: fadeInMobile 0.2s ease-out;
+}
+
+/* Prevent zoom on input focus (iOS) */
+@supports (-webkit-touch-callout: none) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -100%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out;
+}
