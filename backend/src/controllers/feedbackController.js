@@ -41,10 +41,14 @@ const submitFeedback = async (req, res, next) => {
       ],
     );
 
+    const row = result.rows[0];
     res.status(201).json({
       success: true,
       message: "Feedback submitted successfully",
-      data: result.rows[0],
+      data: {
+        ...row,
+        submission_date: today, // return IST date string directly
+      },
     });
   } catch (error) {
     // Handle unique constraint violation
