@@ -4,15 +4,15 @@
 export const MEAL_TIMINGS = {
   BREAKFAST: {
     start: "07:00",
-    end: "09:30",
+    end: "11:00",
     name: "Breakfast",
     displayTime: "7:00 AM - 9:30 AM",
   },
   LUNCH: {
     start: "11:00",
-    end: "14:30",
+    end: "17:00",
     name: "Lunch",
-    displayTime: "12:00 PM - 2:30 PM",
+    displayTime: "11:00 AM - 5:00 PM",
   },
   SNACKS: {
     start: "16:00",
